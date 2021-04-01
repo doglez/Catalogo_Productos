@@ -66,21 +66,33 @@ class CategoriaController extends Controller
      * @param  \App\Models\Categoria  $categoria
      * @return \Illuminate\Http\Response
      */
-    public function edit(Categoria $categoria)
+    public function edit($id)
     {
-        //
+        $Categoria = Categoria::find($id);
+        
+        return view('/modificarCategoria', ['Categoria'=>$Categoria]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Categoria  $categoria
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Categoria $categoria)
+    public function update(Request $request)
     {
-        //
+        $catNombre = $request->catNombre;
+
+        $this->validar($request);
+
+        $Categoria = Categoria::find($request->idCategoria);
+
+        $Categoria->catNombre = $catNombre;
+
+        $Categoria->save();
+
+        return redirect('/adminCategorias')->with(['mensaje'=>'Categoria: ' . $catNombre . ' se ha modificado correctamente']);
     }
 
     /**

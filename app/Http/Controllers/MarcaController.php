@@ -83,7 +83,7 @@ class MarcaController extends Controller
         $Marca = Marca::find($id);
 
         //retornamos vista del form con los datos cargados
-        return view('modificarMarca', ['Marca'=>$Marca]);
+        return view('/modificarMarca', ['Marca'=>$Marca]);
     }
 
     /**
