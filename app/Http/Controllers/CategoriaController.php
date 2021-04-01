@@ -117,7 +117,7 @@ class CategoriaController extends Controller
     private function validar($request) {
         $request->validate(
             [
-                'catNombre' => 'required | min:3 | max:30'
+                'catNombre' => 'required | min:2 | max:30'
             ],
             [
                 'catNombre.required' => 'El campo nombre de categoria es obligatorio',
