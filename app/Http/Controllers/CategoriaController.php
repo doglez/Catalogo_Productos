@@ -25,7 +25,7 @@ class CategoriaController extends Controller
      */
     public function create()
     {
-        //
+        return view(('/agregarCategoria'));
     }
 
     /**
@@ -36,7 +36,17 @@ class CategoriaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $catNombre = $request->catNombre;
+
+        $this->validar($request);
+
+        $Categoria = new Categoria();
+
+        $Categoria->catNombre = $catNombre;
+
+        $Categoria->save();
+
+        return redirect('/adminCategorias')->with(['mensaje' => 'Categoria: ' . $catNombre . ' agregada correctamente']);
     }
 
     /**
@@ -82,5 +92,28 @@ class CategoriaController extends Controller
     public function destroy(Categoria $categoria)
     {
         //
+    }
+    /**
+     *
+     * Funcion para validacion y envio de mensajes cuando es requerido
+     *
+     * @param    type  $request Description
+     *
+     * @return      type
+     *
+     */
+    private function validar($request) {
+        $request->validate(
+            [
+                'catNombre' => 'required | min:3 | max:30'
+            ],
+            [
+                'catNombre.required' => 'El campo nombre de categoria es obligatorio',
+                'catNombre.min' => 'El nombre de la categoria debe tener al menos 2 carateres',
+                'catNombre.max' => 'El nombre de la categoria debe tener por mucho 30 caracteres',
+                'catNombre.unique' => 'El nombre de la categoria debe ser unico'
+            ]
+        );
+
     }
 }
