@@ -43,4 +43,4 @@ Route::put('/modificarCategoria', [CategoriaController::class, 'update']);
 /**
  * CRUD DE PRODUCTOS
  */
-Route::get('/adminProductos', [ ProductoController::class, 'index']);
+Route::get('/adminProductos', [ProductoController::class, 'index']);
