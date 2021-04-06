@@ -88,9 +88,13 @@ class ProductoController extends Controller
      * @param  \App\Models\Producto  $producto
      * @return \Illuminate\Http\Response
      */
-    public function edit(Producto $producto)
+    public function edit($id)
     {
-        //
+        $Producto = Producto::find($id);
+        $marcas = Marca::all();
+        $categorias = Categoria::all();
+
+        return view('/modificarProducto', ['Producto'=>$Producto, 'marcas'=>$marcas, 'categorias'=>$categorias]);
     }
 
     /**
@@ -100,9 +104,31 @@ class ProductoController extends Controller
      * @param  \App\Models\Producto  $producto
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Producto $producto)
+    public function update(Request $request)
     {
-        //
+        // Validacion
+        $this->validar($request);
+
+        // Subir imagen
+        $prdImagen = $this->subirImagen($request);
+
+        // Obtener datos del producto
+        $Producto = Producto::find($request->idProducto);
+
+        // Asignar         
+        $Producto->prdNombre = $request->prdNombre;
+        $Producto->prdPrecio = $request->prdPrecio;
+        $Producto->idMarca = $request->idMarca;
+        $Producto->idCategoria = $request->idCategoria;
+        $Producto->prdPresentacion = $request->prdPresentacion;
+        $Producto->prdStock = $request->prdStock;
+        $Producto->prdImagen = $prdImagen;
+
+        // guardar
+        $Producto->save();
+
+        // redireccionamos
+        return redirect('/adminProductos')->with(['mensaje'=>'Producto ' . $Producto->prdNombre . ' modificado correctamente']);
     }
 
     /**
@@ -165,6 +191,11 @@ class ProductoController extends Controller
     {
         // sino enviaron imagen en el metodo store()   
         $prdImagen = 'noDisponible.jpg';
+
+        // sino enviaron imagen en el metodo update()
+        if ($request->has('orgImagen')) {
+            $prdImagen = $request->orgImagen;
+        }
 
         // Si enviaron una imagen en el metodo store()
         if ($request->file('prdImagen')) {
