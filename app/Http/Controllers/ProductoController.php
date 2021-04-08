@@ -137,9 +137,22 @@ class ProductoController extends Controller
      * @param  \App\Models\Producto  $producto
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Producto $producto)
+    public function destroy(Request $request)
     {
-        //
+        // Almacenar el nombre para pasarlo en el mensaje
+        $prdNombre = $request->prdNombre;
+
+        // se borra el producto
+        // Producto::find($request->idProducto)->delete();
+        Producto::destroy($request->idProducto);
+
+        // if ($request->prdImagen != 'noDisponible.jpg') {
+        //     $request->file('prdImagen')->;
+        // }
+
+        // redireccionamos
+        return redirect('/adminProductos')->with(['mensaje'=>'Producto ' . $prdNombre . ' eliminado correctamente']);
+
     }
     /**
      *
@@ -209,5 +222,19 @@ class ProductoController extends Controller
         }
 
         return $prdImagen;
+    }
+
+        
+    /**
+     * funcion para confirmar baja de un producto
+     *
+     * @param  mixed $id
+     * @return void
+     */
+    public function confirmarBaja($id)
+    {
+        $Producto = Producto::find($id);
+
+        return view('/eliminarProducto', ['Producto'=>$Producto]);
     }
 }
