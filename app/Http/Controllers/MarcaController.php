@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Marca;
+use App\Models\Producto;
 use Illuminate\Http\Request;
 
 class MarcaController extends Controller
@@ -120,9 +121,13 @@ class MarcaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        $mkNombre = $request->mkNombre;
+
+        Marca::destroy($request->idMarca);
+
+        return redirect('/adminMarcas')->with(['mensaje'=>'Marca: ' . $mkNombre . ' eliminado correctamente']);
     }
 
     /**
@@ -147,5 +152,38 @@ class MarcaController extends Controller
             ]
         );
         
+    }    
+    /**
+     * Funcion para confirmar si se puede dar de baja a una marca
+     *
+     * @param  int $id
+     * @return void
+     */
+    public function confirmarBaja($id)
+    {
+        // obtener datos de la marca
+        $Marca = Marca::find($id);
+
+        // chequear si hay productos de esa marca        
+        if (!$this->chkProducto($id)) {
+            return view('/eliminarMarca', ['Marca'=>$Marca]);
+        }
+        
+        return redirect('/adminMarcas')->with(['mensaje'=>'No se puede eliminar la ' . $Marca->mkNombre . ' ya que tiene productos relacionados']);
+        
+    }
+    
+    /**
+     * Funcion que chekea la existencia de un producto con el $id marca
+     *
+     * @param  int $id
+     * @return objet $chkProducto
+     */
+    private function chkProducto($id)
+    {
+        // $chkProducto = Producto::where('idMarca', $id)->count(); //pregunto cuantos hay?
+        $chkProducto = Producto::firstwhere('idMarca', $id); //pregunto si hay?
+
+        return $chkProducto;
     }
 }
