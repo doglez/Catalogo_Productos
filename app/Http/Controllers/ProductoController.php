@@ -21,6 +21,13 @@ class ProductoController extends Controller
         return view('/adminProductos', ['productos'=>$productos]);
     }
 
+    public function portada()
+    {
+        $productos = Producto::with('relMarca', 'relCategoria')->paginate(5);
+
+        return view('/portada', ['productos'=>$productos]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

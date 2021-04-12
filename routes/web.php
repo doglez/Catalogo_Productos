@@ -52,3 +52,4 @@ Route::get('/modificarProducto/{id}', [ProductoController::class, 'edit']);
 Route::put('/modificarProducto', [ProductoController::class, 'update']);
 Route::get('/eliminarProducto/{id}', [ProductoController::class, 'confirmarBaja']);
 Route::delete('/eliminarProducto', [ProductoController::class, 'destroy']);
+Route::get('/portada', [ProductoController::class, 'portada']);
