@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categoria;
+use App\Models\Producto;
 use Illuminate\Http\Request;
 
 class CategoriaController extends Controller
@@ -98,12 +99,16 @@ class CategoriaController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Categoria  $categoria
+     * @param  \App\Models\Categoria  $request
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Categoria $categoria)
+    public function destroy(Request $request)
     {
-        //
+        $catNombre = $request->catNombre;
+
+        Categoria::destroy($request->idCategoria);
+
+        return redirect('/adminCategorias')->with(['mensaje'=>'Categoria: ' . $catNombre . ' eliminada correctamente']);
     }
     /**
      *
@@ -127,5 +132,37 @@ class CategoriaController extends Controller
             ]
         );
 
+    }
+    
+    /**
+     * Confirma que se va a eliminar un recurso y valida que no tenga productos relacionados
+     *
+     * @param  int $id
+     * @return \Iluminate\Http\Response
+     */
+    public function confirmarBaja($id)
+    {
+        // obtener datos de la categoria
+        $Categoria = Categoria::find($id);
+
+        // chequear si hay productos de esa categoria
+        if (!$this->chkProducto($id)) {
+            return view('/eliminarCategoria', ['Categoria'=>$Categoria]);
+        }
+
+        return redirect('/adminCategorias')->with(['mensaje'=>'No se puede eliminar la cateria ' . $Categoria->catNombre . ' ya que tiene productos relacionados']);
+    }
+    
+    /**
+     * Valida que no tenga productos relacionados a la categoria
+     *
+     * @param  int $id
+     * @return \Iluminate\Http\Response
+     */
+    private function chkProducto($id)
+    {
+        $chkProducto = Producto::firstwhere('idCategoria', $id);
+
+        return $chkProducto;
     }
 }

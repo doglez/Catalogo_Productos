@@ -33,7 +33,7 @@
                             </a>
                         </td>
                         <td>
-                            <a href="/eliminarCategoria" class="btn btn-outline-secondary">
+                            <a href="/eliminarCategoria/{{$categoria->idCategoria}}" class="btn btn-outline-secondary">
                                 Eliminar
                             </a>
                         </td>
