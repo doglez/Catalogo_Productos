@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Categoria;
-use App\Models\Marca;
 use App\Models\Producto;
 use Illuminate\Http\Request;
 
@@ -16,16 +14,7 @@ class ProductoController extends Controller
      */
     public function index()
     {
-        $productos = Producto::with('relMarca', 'relCategoria')->paginate(5);
-
-        return view('/adminProductos', ['productos'=>$productos]);
-    }
-
-    public function portada()
-    {
-        $productos = Producto::with('relMarca', 'relCategoria')->paginate(5);
-
-        return view('/portada', ['productos'=>$productos]);
+        //
     }
 
     /**
@@ -35,11 +24,7 @@ class ProductoController extends Controller
      */
     public function create()
     {
-        // Listado de marcas y categorias
-        $marcas = Marca::all();
-        $categorias = Categoria::all();
-
-        return view('/agregarProducto', ['marcas'=>$marcas, 'categorias'=>$categorias]);
+        //
     }
 
     /**
@@ -50,32 +35,7 @@ class ProductoController extends Controller
      */
     public function store(Request $request)
     {
-        // Validacion
-        $this->validar($request);
-
-        // Subir imagen
-        $prdImagen = $this->subirImagen($request);
-
-        // Instanciar
-        $Producto = new Producto;
-
-        // Asignar 
-        
-        $Producto->prdNombre = $request->prdNombre;
-        $Producto->prdPrecio = $request->prdPrecio;
-        $Producto->idMarca = $request->idMarca;
-        $Producto->idCategoria = $request->idCategoria;
-        $Producto->prdPresentacion = $request->prdPresentacion;
-        $Producto->prdStock = $request->prdStock;
-        $Producto->prdImagen = $prdImagen;
-
-        // Guardar
-        $Producto->save();
-
-        // Redireccionar + mensaje ok
-        return redirect('/adminProductos')->with(
-            ['mensaje'=>'Producto ' . $Producto->prdNombre . ' agregado correctamente']
-        );
+        //
     }
 
     /**
@@ -95,13 +55,9 @@ class ProductoController extends Controller
      * @param  \App\Models\Producto  $producto
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Producto $producto)
     {
-        $Producto = Producto::find($id);
-        $marcas = Marca::all();
-        $categorias = Categoria::all();
-
-        return view('/modificarProducto', ['Producto'=>$Producto, 'marcas'=>$marcas, 'categorias'=>$categorias]);
+        //
     }
 
     /**
@@ -111,31 +67,9 @@ class ProductoController extends Controller
      * @param  \App\Models\Producto  $producto
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, Producto $producto)
     {
-        // Validacion
-        $this->validar($request);
-
-        // Subir imagen
-        $prdImagen = $this->subirImagen($request);
-
-        // Obtener datos del producto
-        $Producto = Producto::find($request->idProducto);
-
-        // Asignar         
-        $Producto->prdNombre = $request->prdNombre;
-        $Producto->prdPrecio = $request->prdPrecio;
-        $Producto->idMarca = $request->idMarca;
-        $Producto->idCategoria = $request->idCategoria;
-        $Producto->prdPresentacion = $request->prdPresentacion;
-        $Producto->prdStock = $request->prdStock;
-        $Producto->prdImagen = $prdImagen;
-
-        // guardar
-        $Producto->save();
-
-        // redireccionamos
-        return redirect('/adminProductos')->with(['mensaje'=>'Producto ' . $Producto->prdNombre . ' modificado correctamente']);
+        //
     }
 
     /**
@@ -144,104 +78,8 @@ class ProductoController extends Controller
      * @param  \App\Models\Producto  $producto
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function destroy(Producto $producto)
     {
-        // Almacenar el nombre para pasarlo en el mensaje
-        $prdNombre = $request->prdNombre;
-
-        // se borra el producto
-        // Producto::find($request->idProducto)->delete();
-        Producto::destroy($request->idProducto);
-
-        // if ($request->prdImagen != 'noDisponible.jpg') {
-        //     $request->file('prdImagen')->;
-        // }
-
-        // redireccionamos
-        return redirect('/adminProductos')->with(['mensaje'=>'Producto ' . $prdNombre . ' eliminado correctamente']);
-
-    }
-    /**
-     *
-     * Funcion para validacion y envio de mensajes cuando es requerido
-     *
-     * @param    type  $request Description
-     *
-     * @return   type
-     *
-     */
-    private function validar($request) {
-        $request->validate(
-            [
-                'prdNombre'=>'required|min:3|max:70',
-                'prdPrecio'=>'required|numeric|min:0',
-                'prdPresentacion'=>'required|min:3|max:150',
-                'prdStock'=>'required|integer|min:1',
-                'prdImagen'=>'mimes:jpg,jpeg,png,gif,svg,webp|max:2048'
-            ],
-            [
-                'prdNombre.required'=>'Complete el campo Nombre',
-                'prdNombre.min'=>'Complete el campo Nombre con al menos 3 caractéres',
-                'prdNombre.max'=>'Complete el campo Nombre con 70 caractéres como máxino',
-                'prdPrecio.required'=>'Complete el campo Precio',
-                'prdPrecio.numeric'=>'Complete el campo Precio con un número',
-                'prdPrecio.min'=>'Complete el campo Precio con un número positivo',
-                'prdPresentacion.required'=>'Complete el campo Presentación',
-                'prdPresentacion.min'=>'Complete el campo Presentación con al menos 3 caractéres',
-                'prdPresentacion.max'=>'Complete el campo Presentación con 150 caractérescomo máxino',
-                'prdStock.required'=>'Complete el campo Stock',
-                'prdStock.integer'=>'Complete el campo Stock con un número entero',
-                'prdStock.min'=>'Complete el campo Stock con un número positivo',
-                'prdImagen.mimes'=>'Debe ser una imagen',
-                'prdImagen.max'=>'Debe ser una imagen de 2MB como máximo'
-            ]
-        );
-    }
-    
-        
-    /**
-     * Funcion para subir imagenes subirImagen
-     *
-     * @param    type   $request    file
-     *
-     * @return   type   $prdImagen  string
-     * 
-     */
-    private function subirImagen($request)
-    {
-        // sino enviaron imagen en el metodo store()   
-        $prdImagen = 'noDisponible.jpg';
-
-        // sino enviaron imagen en el metodo update()
-        if ($request->has('orgImagen')) {
-            $prdImagen = $request->orgImagen;
-        }
-
-        // Si enviaron una imagen en el metodo store()
-        if ($request->file('prdImagen')) {
-            // renombrar el archivo
-            $ext = $request->file('prdImagen')->extension();
-            
-            $prdImagen = 'Imagen' . time() . '.' . $ext;
-            
-            // subir archivo
-            $request->file('prdImagen')->move(public_path('productos/'), $prdImagen);
-        }
-
-        return $prdImagen;
-    }
-
-        
-    /**
-     * funcion para confirmar baja de un producto
-     *
-     * @param  mixed $id
-     * @return void
-     */
-    public function confirmarBaja($id)
-    {
-        $Producto = Producto::find($id);
-
-        return view('/eliminarProducto', ['Producto'=>$Producto]);
+        //
     }
 }

@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\MarcaController;
-use App\Http\Controllers\ProductoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,38 +19,28 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::view('/inicio', 'inicio');
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');
 
 /**
- * CRUD DE MARCAS
+ * --------------------------------------------------------------------------
+ * Crud de Marcas
+ * --------------------------------------------------------------------------
+ * 
  */
-Route::get('/adminMarcas', [ MarcaController::class, 'index' ]);
-Route::get('/agregarMarca', [ MarcaController::class, 'create']);
-Route::post('/agregarMarca', [MarcaController::class, 'store']);
-Route::get('/modificarMarca/{id}', [MarcaController::class, 'edit']);
-Route::put('/modificarMarca', [MarcaController::class, 'update']);
-Route::get('/eliminarMarca/{id}', [MarcaController::class, 'confirmarBaja']);
-Route::delete('/eliminarMarca', [MarcaController::class, 'destroy']);
+Route::middleware(['auth:sanctum', 'verified'])->get('/adminMarcas', [MarcaController::class, 'index'])->name('adminMarcas');
+Route::middleware(['auth:sanctum', 'verified'])->get('/agregarMarca', [ MarcaController::class, 'create'])->name('agregarMarca');
+Route::middleware(['auth:sanctum', 'verified'])->post('/agregarMarca', [MarcaController::class, 'store'])->name('agregarMarca');
+Route::middleware(['auth:sanctum', 'verified'])->get('/modificarMarca/{id}', [MarcaController::class, 'edit'])->name('modificarMarca');
+Route::middleware(['auth:sanctum', 'verified'])->put('/modificarMarca', [MarcaController::class, 'update'])->name('modificarMarca');
+Route::middleware(['auth:sanctum', 'verified'])->get('/eliminarMarca/{id}', [MarcaController::class, 'confirmarBaja'])->name('eliminarMarca');
+Route::middleware(['auth:sanctum', 'verified'])->delete('/eliminarMarca', [MarcaController::class, 'destroy'])->name('eliminarMarca');
 
 /**
- * CRUD DE CATEGORIAS
+ * --------------------------------------------------------------------------
+ * Crud de Categorias
+ * --------------------------------------------------------------------------
+ * 
  */
-Route::get('/adminCategorias', [CategoriaController::class, 'index']);
-Route::get('/agregarCategoria', [CategoriaController::class, 'create']);
-Route::post('/agregarCategoria', [CategoriaController::class, 'store']);
-Route::get('/modificarCategoria/{id}', [CategoriaController::class, 'edit']);
-Route::put('/modificarCategoria', [CategoriaController::class, 'update']);
-Route::get('/eliminarCategoria/{id}', [CategoriaController::class, 'confirmarBaja']);
-Route::delete('/eliminarCategoria', [CategoriaController::class, 'destroy']);
-
-/**
- * CRUD DE PRODUCTOS
- */
-Route::get('/adminProductos', [ProductoController::class, 'index']);
-Route::get('/agregarProducto', [ProductoController::class, 'create']);
-Route::post('/agregarProducto', [ProductoController::class, 'store']);
-Route::get('/modificarProducto/{id}', [ProductoController::class, 'edit']);
-Route::put('/modificarProducto', [ProductoController::class, 'update']);
-Route::get('/eliminarProducto/{id}', [ProductoController::class, 'confirmarBaja']);
-Route::delete('/eliminarProducto', [ProductoController::class, 'destroy']);
-Route::get('/portada', [ProductoController::class, 'portada']);
+Route::middleware(['auth:sanctum', 'verified'])->get('/adminCategorias', [CategoriaController::class, 'index'])->name('adminCategorias');

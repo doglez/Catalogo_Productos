@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categoria;
-use App\Models\Producto;
 use Illuminate\Http\Request;
 
 class CategoriaController extends Controller
@@ -16,6 +15,7 @@ class CategoriaController extends Controller
     public function index()
     {
         $categorias = Categoria::paginate(5);
+
         return view('/adminCategorias', ['categorias'=>$categorias]);
     }
 
@@ -26,7 +26,7 @@ class CategoriaController extends Controller
      */
     public function create()
     {
-        return view(('/agregarCategoria'));
+        //
     }
 
     /**
@@ -37,17 +37,7 @@ class CategoriaController extends Controller
      */
     public function store(Request $request)
     {
-        $catNombre = $request->catNombre;
-
-        $this->validar($request);
-
-        $Categoria = new Categoria();
-
-        $Categoria->catNombre = $catNombre;
-
-        $Categoria->save();
-
-        return redirect('/adminCategorias')->with(['mensaje' => 'Categoria: ' . $catNombre . ' agregada correctamente']);
+        //
     }
 
     /**
@@ -67,102 +57,31 @@ class CategoriaController extends Controller
      * @param  \App\Models\Categoria  $categoria
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Categoria $categoria)
     {
-        $Categoria = Categoria::find($id);
-        
-        return view('/modificarCategoria', ['Categoria'=>$Categoria]);
+        //
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int $id
+     * @param  \App\Models\Categoria  $categoria
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, Categoria $categoria)
     {
-        $catNombre = $request->catNombre;
-
-        $this->validar($request);
-
-        $Categoria = Categoria::find($request->idCategoria);
-
-        $Categoria->catNombre = $catNombre;
-
-        $Categoria->save();
-
-        return redirect('/adminCategorias')->with(['mensaje'=>'Categoria: ' . $catNombre . ' se ha modificado correctamente']);
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Categoria  $request
+     * @param  \App\Models\Categoria  $categoria
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function destroy(Categoria $categoria)
     {
-        $catNombre = $request->catNombre;
-
-        Categoria::destroy($request->idCategoria);
-
-        return redirect('/adminCategorias')->with(['mensaje'=>'Categoria: ' . $catNombre . ' eliminada correctamente']);
-    }
-    /**
-     *
-     * Funcion para validacion y envio de mensajes cuando es requerido
-     *
-     * @param    type  $request Description
-     *
-     * @return      type
-     *
-     */
-    private function validar($request) {
-        $request->validate(
-            [
-                'catNombre' => 'required | min:2 | max:30'
-            ],
-            [
-                'catNombre.required' => 'El campo nombre de categoria es obligatorio',
-                'catNombre.min' => 'El nombre de la categoria debe tener al menos 2 carateres',
-                'catNombre.max' => 'El nombre de la categoria debe tener por mucho 30 caracteres',
-                'catNombre.unique' => 'El nombre de la categoria debe ser unico'
-            ]
-        );
-
-    }
-    
-    /**
-     * Confirma que se va a eliminar un recurso y valida que no tenga productos relacionados
-     *
-     * @param  int $id
-     * @return \Iluminate\Http\Response
-     */
-    public function confirmarBaja($id)
-    {
-        // obtener datos de la categoria
-        $Categoria = Categoria::find($id);
-
-        // chequear si hay productos de esa categoria
-        if (!$this->chkProducto($id)) {
-            return view('/eliminarCategoria', ['Categoria'=>$Categoria]);
-        }
-
-        return redirect('/adminCategorias')->with(['mensaje'=>'No se puede eliminar la cateria ' . $Categoria->catNombre . ' ya que tiene productos relacionados']);
-    }
-    
-    /**
-     * Valida que no tenga productos relacionados a la categoria
-     *
-     * @param  int $id
-     * @return \Iluminate\Http\Response
-     */
-    private function chkProducto($id)
-    {
-        $chkProducto = Producto::firstwhere('idCategoria', $id);
-
-        return $chkProducto;
+        //
     }
 }

@@ -25,7 +25,7 @@
             @if (Route::has('login'))
                 <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
                     @auth
-                        <a href="{{ url('/home') }}" class="text-sm text-gray-700 underline">Home</a>
+                        <a href="{{ url('/dashboard') }}" class="text-sm text-gray-700 underline">Dashboard</a>
                     @else
                         <a href="{{ route('login') }}" class="text-sm text-gray-700 underline">Log in</a>
 
@@ -46,6 +46,10 @@
                 </div>
 
                 <div class="mt-8 bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
+                    <div class="text-gray-600">
+                        <h1>Portada sino estamos logeados</h1>
+                    </div>
+
                     <div class="grid grid-cols-1 md:grid-cols-2">
                         <div class="p-6">
                             <div class="flex items-center">
